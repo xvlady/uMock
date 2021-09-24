@@ -1,0 +1,5 @@
+[push]
+    pushoption = merge_request.create
+
+[alias]
+    c = commit -am

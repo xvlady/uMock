@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  http:
+    image: nginx:mainline-alpine
+    volumes:
+      - ./app/static:/app/static/
+    ports:
+      - "80:80"
+    restart: always
+  web:
+    build:
+      dockerfile: sftp/Dockerfile
+      context: .
+    depends_on:
+      - http
+      - cache
+    user: 54297:54297
+    entrypoint: bash -c "pipenv run migrate_db && pipenv run wog_start"
+    ports:
+      - "8383:8383"
+    container_name: deploypipeline_web_1
+    restart: always
+  cache:
+    image: redis:6.2.5-alpine
+    restart: always
